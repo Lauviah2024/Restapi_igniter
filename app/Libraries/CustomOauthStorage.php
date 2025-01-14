@@ -2,9 +2,9 @@
 
 namespace App\Libraries;
 
+use InvalidArgumentException;
 use OAuth2\OpenID\Storage\UserClaimsInterface;
 use OAuth2\OpenID\Storage\AuthorizationCodeInterface as OpenIDAuthorizationCodeInterface;
-use InvalidArgumentException;
 
 /**
  * Simple PDO storage for all storage types
@@ -27,7 +27,6 @@ class CustomOauthStorage implements
     \OAuth2\Storage\JwtBearerInterface,
     \OAuth2\Storage\ScopeInterface,
     \OAuth2\Storage\PublicKeyInterface
-    
 {
     /**
      * @var \PDO
@@ -309,11 +308,12 @@ class CustomOauthStorage implements
      */
     public function checkUserCredentials($username, $password)
     {
-        if ($user = $this->getUser($username)) {
-            return $this->checkPassword($user, $password);
+        $user = $this->getUser($username);
+        if ($user === null) {
+            return false; // User not found.
         }
 
-        return false;
+        return $this->checkPassword($user, $password);
     }
 
     /**
@@ -430,7 +430,7 @@ class CustomOauthStorage implements
      */
     protected function checkPassword($user, $password)
     {
-        return password_verify($password, $user['password']);   
+        return password_verify($password,$user['password']);
     }
 
     // use a secure hashing algorithm when storing passwords. Override this for your application
@@ -450,17 +450,21 @@ class CustomOauthStorage implements
         $where = ['email' => $email];
         $builder->where($where);
         $user = $builder->get()->getRowArray();
+        if (!$user){
+            return null;
+        }
+        
+        return array_merge(
+            ['user_id' => $user['id']]
+        , $user);
+        
         // $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
         // $stmt->execute(array('username' => $username));
 
         // if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
         //     return false;
         // }
-
         // the default behavior is to use "username" as the user_id
-        return array_merge(array(
-            'user_id' => $user['id']
-        ), $user);
     }
 
     /**

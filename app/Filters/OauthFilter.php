@@ -2,20 +2,20 @@
 
 namespace App\Filters;
 
-use CodeIgniter\Filters\FilterInterface;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-
-use App\Libraries\OAuth;
 use OAuth2\Request;
 use OAuth2\Response;
+use App\Libraries\Oauth;
+
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Filters\FilterInterface;
 
 
 class OauthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $oauth = new OAuth();
+        $oauth = new Oauth();
         $request = Request::createFromGlobals();
         $response = new Response();
 

@@ -7,7 +7,7 @@ class Blog extends ResourceController
 {
     protected $modelName = 'App\Models\BlogModel';
     protected $format = 'json';
-    
+
     public function index(){
         $posts = $this->model->findAll();
         return $this->respond($posts);
@@ -29,7 +29,7 @@ class Blog extends ResourceController
                 'post-title' => $this->request->getVar('title'),
                 'post-description' => $this->request->getVar('description'),
             ];
-            
+
             $post_id = $this->model->insert($data);
             $data['post_id'] = $post_id;
             return $this->respondCreated($data);
@@ -66,14 +66,14 @@ class Blog extends ResourceController
         }
     }
 
-    public function delete($id = null){
-        $data = $this->model->find($id);
-        if ($data){
-            $this->model->delete($id);
-            return $this->respondDeleted($data);
-        }
-        else{
-            return $this->failNotFound('Item not found');
-        }
-    }
+    // public function delete($id = null){
+        // $data = $this->model->find($id);
+        // if ($data){
+            // $this->model->delete($id);
+            // return $this->respondDeleted($data);
+        // }
+        // else{
+            // return $this->failNotFound('Item not found');
+        // }
+    // }
 }

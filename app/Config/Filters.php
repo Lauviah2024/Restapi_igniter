@@ -2,17 +2,17 @@
 
 namespace Config;
 
-use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
-use CodeIgniter\Filters\DebugToolbar;
-use CodeIgniter\Filters\ForceHTTPS;
 use CodeIgniter\Filters\Honeypot;
-use CodeIgniter\Filters\InvalidChars;
+use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\PageCache;
-use CodeIgniter\Filters\PerformanceMetrics;
+use CodeIgniter\Filters\ForceHTTPS;
+use CodeIgniter\Filters\DebugToolbar;
+use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
+use CodeIgniter\Config\Filters as BaseFilters;
+use CodeIgniter\Filters\PerformanceMetrics;
 
 class Filters extends BaseConfig
 {
@@ -35,7 +35,7 @@ class Filters extends BaseConfig
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
-        'oauthFilter' => \App\Filters\OauthFilter::class,
+        'oauthfilter' => \App\Filters\OauthFilter::class,
     ];
 
     /**
@@ -106,6 +106,6 @@ class Filters extends BaseConfig
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [
-        'oauthFilter' => ['before' => ['blog','blog/*']]
+        'oauthfilter' => ['before' => ['blog','blog/*']]
     ];
 }

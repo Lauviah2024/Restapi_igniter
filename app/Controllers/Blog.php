@@ -8,11 +8,13 @@ class Blog extends ResourceController
     protected $modelName = 'App\Models\BlogModel';
     protected $format = 'json';
 
+    // Get all posts from database
     public function index(){
         $posts = $this->model->findAll();
         return $this->respond($posts);
     }
 
+    // Create a post
     public function create(){
         helper(['form']);
 
@@ -26,8 +28,8 @@ class Blog extends ResourceController
         }
         else {
             $data = [
-                'post-title' => $this->request->getVar('title'),
-                'post-description' => $this->request->getVar('description'),
+                'post_title' => $this->request->getVar('title'),
+                'post_description' => $this->request->getVar('description'),
             ];
 
             $post_id = $this->model->insert($data);
@@ -36,12 +38,18 @@ class Blog extends ResourceController
         }
     }
 
-    public function show($id = null)
+    // get a specific post by the post_id
+    public function show($postId = null)
     {
-        $data = $this->model->find($id);
-        return $this->respond($data);
+        $data = $this->model->find($postId);
+        if ($data){
+            return $this->respond($data);
+        }
+        else
+        return $this->failNotFound('Post not found !');
     }
 
+    // Update a post
     public function update($id = null){
         helper(['form']);
 
@@ -66,14 +74,15 @@ class Blog extends ResourceController
         }
     }
 
-    // public function delete($id = null){
-        // $data = $this->model->find($id);
-        // if ($data){
-            // $this->model->delete($id);
-            // return $this->respondDeleted($data);
-        // }
-        // else{
-            // return $this->failNotFound('Item not found');
-        // }
-    // }
+    // Delete a post
+    public function delete($id = null){
+        $data = $this->model->find($id);
+        if ($data){
+            $this->model->delete($id);
+            return $this->respondDeleted($data);
+        }
+        else{
+            return $this->failNotFound('Item not found');
+        }
+    }
 }
